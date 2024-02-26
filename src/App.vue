@@ -1,9 +1,11 @@
 <script setup>
 import MyComponent from './components/MyComponent.vue'
+import ApiComponent from './components/ApiComponent.vue';
 </script>
 
 <template>
   <main>
+    <ApiComponent/>
     <MyComponent/>
   </main>
 </template>
