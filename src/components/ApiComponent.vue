@@ -1,15 +1,11 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 
 const API_URL = `https://catfact.ninja/fact`
 
 const result = ref(null)
 const firstMsg = ref("Дивитись факт про котиків")
 const secondMsg = ref("Змінити факт")
-
-// watchEffect(async () => {
-//   result.value = await (await fetch(API_URL)).json()
-// })
 
 async function fetchFact() {
     result.value = await (await fetch(API_URL)).json()
@@ -18,6 +14,15 @@ async function fetchFact() {
 </script>
 
 <template>
-    <button :disabled="result" @click="fetchFact">Дивитись факт про котиків</button>
-    <p v-if="result">{{ result.fact }}</p>
+    <div class="wrapperApi">
+       <button @click="fetchFact">{{ result ? secondMsg : firstMsg }}</button>
+        <p v-if="result" :style="{ width: '240px' }">{{ result.fact }}</p> 
+    </div>
 </template>
+
+<style>
+.wrapperApi{
+    margin-bottom: 40px;
+    height: 300px;
+    }
+</style>

@@ -1,37 +1,44 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import IconDelete from './icons/IconDelete.vue'
+import {useListStore} from '../stores/list'
+import { storeToRefs } from 'pinia'
 
 const STORAGE_KEY = 'my-list'
+const store = useListStore()
 
-const usersList = ref(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
+const { taskList } = storeToRefs(store)
+const { addItem, deleteItem} = store
+
+// const usersList = ref(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
 const text = ref('')
 
-watchEffect(() => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(usersList.value))
-})
+// watchEffect(() => {
+//   localStorage.setItem(STORAGE_KEY, JSON.stringify(usersList.value))
+// })
 
-function addItem(e) {
-    usersList.value.push(text.value)
+function createItem(e) {
+    addItem(text.value)
     text.value=''
     e.target.value=''
 }
+
 </script>
 
 <template>
     <div class="wrapper">
-        <input v-model.lazy="text" @keyup.enter="addItem"> 
-        <button @click="addItem" :style="{cursor: 'pointer'}">Додати</button>
+        <input v-model.lazy="text" @keyup.enter="createItem"> 
+        <button @click="createItem" :style="{cursor: 'pointer'}">Додати</button>
     </div>
-    <ul v-if="usersList.length" class="list">
-        <li v-for="item of usersList" class="listItem">
+    <ul v-if="taskList.length" class="list">
+        <li v-for="item of taskList" class="listItem">
             <p>{{ item }}</p>
-            <button class="button" @click="usersList = usersList.filter(a => a!= item)">
-            <IconDelete/> Delete
-            </button>
+            <button class="button" @click="()=>deleteItem(item)"> 
+                <IconDelete/> Delete
+            </button> 
         </li>
     </ul>
-    <p v-if="!usersList.length">Тут буде ваш список</p>
+    <p v-if="!taskList.length">Тут буде ваш список</p>
 </template>
 
 <style>
